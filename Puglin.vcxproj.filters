@@ -27,6 +27,9 @@
     <ClCompile Include="puglin_list.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="OBSPlugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OBSPlugin.h">

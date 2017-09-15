@@ -81,7 +81,7 @@
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>obs.lib;d3d11.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>obs.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -118,12 +118,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="OBSPlugin.cpp" />
     <ClCompile Include="puglin.c">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
     </ClCompile>
-    <ClCompile Include="SamplePlugin.cpp" />
+    <ClCompile Include="SamplePlugin.cpp">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsCpp</CompileAs>
+    </ClCompile>
     <ClCompile Include="SamplePlugin.h" />
-    <ClCompile Include="puglin_list.cpp" />
+    <ClCompile Include="puglin_list.cpp">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsCpp</CompileAs>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OBSPlugin.h" />

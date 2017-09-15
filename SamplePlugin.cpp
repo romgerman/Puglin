@@ -15,7 +15,14 @@ public:
 
 	void* OnCreate(obs_data_t* settings, obs_source_t* source) override
 	{
-		MessageBox(0, "ONCREATE WRKS", "", 0);
+		void* handle = obs_create_ui("mybutton", "mytask", "win32", 0, 0);
+		
+		if (!handle)
+			MessageBox(0, "ONCREATE WRKS", "", 0);
+		else
+		{
+			MessageBox(0, "OK", "", 0);
+		}
 		return nullptr;
 	}
 };
