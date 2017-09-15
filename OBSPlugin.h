@@ -26,9 +26,10 @@ namespace Puglin {
 		OPCMouseWheel  = 1 << 17,
 		OPCFocus       = 1 << 18,
 		OPCKeyClick    = 1 << 19,
-		OPCFilterRemove    = 1 << 20,
-		OPCTransitionStart = 1 << 21,
-		OPCTransitionStop   = 1 << 22
+		OPCFilterRemove     = 1 << 20,
+		OPCAudioRender      = 1 << 21,
+		OPCTransitionStart  = 1 << 22,
+		OPCTransitionStop   = 1 << 23
 	};
 	
 	class OBSPlugin
@@ -58,25 +59,26 @@ namespace Puglin {
 
 		virtual void OnVideoRender(gs_effect_t* effect) {}
 
-		virtual obs_source_frame* OnFilterVideo(struct obs_source_frame* frame) { return frame; }
-		virtual obs_audio_data* OnFilterAudio(struct obs_audio_data* audio) { return audio; }
+		virtual obs_source_frame* OnFilterVideo(obs_source_frame* frame) { return frame; }
+		virtual obs_audio_data* OnFilterAudio(obs_audio_data* audio) { return audio; }
 
 		// enum_active_sources? // TODO: idk how it works
 
 		virtual void OnSave(obs_data_t* settings) {}
 		virtual void OnLoad(obs_data_t* settings) {}
 
-		virtual void OnMouseClick(const struct obs_mouse_event* event, int32_t type, bool mouse_up, uint32_t click_count) {}
-		virtual void OnMouseMove(const struct obs_mouse_event* event, bool mouse_leave) {}
-		virtual void OnMouseWheel(const struct obs_mouse_event* event, int x_delta,	int y_delta) {}
+		virtual void OnMouseClick(const obs_mouse_event* event, int32_t type, bool mouse_up, uint32_t click_count) {}
+		virtual void OnMouseMove(const obs_mouse_event* event, bool mouse_leave) {}
+		virtual void OnMouseWheel(const obs_mouse_event* event, int x_delta,	int y_delta) {}
 
 		virtual void OnFocus(bool focus) {}
 
-		virtual void OnKeyClick(const struct obs_key_event* event, bool key_up) {}
+		virtual void OnKeyClick(const obs_key_event* event, bool key_up) {}
 
 		virtual void OnFilterRemove(obs_source_t* source) {}
 
-		// audio_render? // TODO: implement this
+		virtual bool OnAudioRender(uint64_t *ts_out, obs_source_audio_mix *audio_output, uint32_t mixers, size_t channels, size_t sample_rate) { return false; }
+
 		// enum_all_sources? // TODO: idk how it works
 
 		virtual void OnTransitionStart() {}
@@ -86,7 +88,7 @@ namespace Puglin {
 		void RegisterPlugin(unsigned int flags);
 
 	private:
-		static const char* GetNameI(void* type_data);
+		static const char* GetNameI(void* type_data); // TODO: maybe i should make get_name callback (?)
 
 		static void* OnCreateI(obs_data_t* settings, obs_source_t* source);
 		static void OnDestroyI(void* data);
@@ -98,6 +100,8 @@ namespace Puglin {
 		{
 			//static_cast<OBSPlugin*>(settings->)
 			
+			// TODO: is there no way?
+
 		}*/
 
 		static obs_properties_t* GetPropertiesI(void* data);
@@ -129,6 +133,8 @@ namespace Puglin {
 		static void OnKeyClickI(void* data, const struct obs_key_event* event, bool key_up);
 
 		static void OnFilterRemoveI(void* data, obs_source_t* source);
+
+		static bool OnAudioRenderI(void *data, uint64_t *ts_out, obs_source_audio_mix *audio_output, uint32_t mixers, size_t channels, size_t sample_rate);
 
 		static void OnTransitionStartI(void* data);
 		static void OnTransitionStopI(void* data);

@@ -15,7 +15,7 @@ void OBSPlugin::RegisterPlugin(unsigned int flags)
 		OBSPlugin::OnDestroyI,
 		(flags & OPCWidth) ? OBSPlugin::GetWidthI : nullptr,
 		(flags & OPCHeight) ? OBSPlugin::GetHeightI : nullptr,
-		nullptr,//(flags & OPCDefaults) ? OBSPlugin::GetDefaultsI : nullptr,
+		nullptr,//(flags & OPCDefaults) ? OBSPlugin::GetDefaultsI : nullptr, // lambda? (NOPE, lambda works only if not captures anything)
 		(flags & OPCProperties) ? OBSPlugin::GetPropertiesI : nullptr,
 		(flags & OPCUpdate) ? OBSPlugin::OnUpdateI : nullptr,
 		(flags & OPCActivate) ? OBSPlugin::OnActivateI : nullptr,
@@ -37,7 +37,7 @@ void OBSPlugin::RegisterPlugin(unsigned int flags)
 		(flags & OPCFilterRemove) ? OBSPlugin::OnFilterRemoveI : nullptr,
 		this, // type_data
 		nullptr, // free_type_data
-		nullptr, // audio_render
+		(flags & OPCAudioRender) ? OBSPlugin::OnAudioRenderI : nullptr,
 		nullptr, // enum_all_sources
 		(flags & OPCTransitionStart) ? OBSPlugin::OnTransitionStartI : nullptr,
 		(flags & OPCTransitionStop) ? OBSPlugin::OnTransitionStopI : nullptr
@@ -153,6 +153,11 @@ void OBSPlugin::OnKeyClickI(void* data, const struct obs_key_event* event, bool 
 void OBSPlugin::OnFilterRemoveI(void* data, obs_source_t* source)
 {
 	static_cast<OBSPlugin*>(data)->OnFilterRemove(source);
+}
+
+bool OBSPlugin::OnAudioRenderI(void* data, uint64_t* ts_out, obs_source_audio_mix* audio_output, uint32_t mixers, size_t channels, size_t sample_rate)
+{
+	return static_cast<OBSPlugin*>(data)->OnAudioRender(ts_out, audio_output, mixers, channels, sample_rate);
 }
 
 void OBSPlugin::OnTransitionStartI(void* data)
